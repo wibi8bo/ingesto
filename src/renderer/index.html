@@ -1893,7 +1893,7 @@ Save
 
 <div class="mi-row">
 <span class="mi-badge" style="background:var(--blue-d);color:var(--blue);">SIZE CHECK</span>
-<div class="mi-body"><b>Copy + size check.</b> After copying, INGESTO compares the byte size of each source and destination file. Catches incomplete or truncated copies (disconnected drive, full disk, interrupted write) at almost no time cost. It does <b>not</b> detect silent bit-level corruption, because the content itself isn't read back.</div>
+<div class="mi-body" id="mif-size"><b>Copy + size check.</b> After copying, INGESTO compares the byte size of each source and destination file. Catches incomplete or truncated copies (disconnected drive, full disk, interrupted write) at almost no time cost. It does <b>not</b> detect silent bit-level corruption, because the content itself isn't read back.</div>
 </div>
 
 <div class="mi-row">
@@ -1908,7 +1908,7 @@ Save
 
 <div class="mi-row">
 <span class="mi-badge" style="background:rgba(168,128,255,.16);color:var(--pro);">PRO · Double read</span>
-<div class="mi-body"><b>Optional in PRO, detects a failing card.</b> After verifying the copies, INGESTO reads the <b>source a second time</b> and checks it still returns the same data. A card that gives different bytes on re-read is dying, and those files are flagged as suspect (and left out of the checksum list). <b>Limit:</b> the second read only reaches the card if the data no longer sits in the OS RAM cache. That is the case on real offloads (footage larger than your RAM), but <b>not guaranteed on a small test copy on a high-RAM machine</b>. It roughly doubles verify time. Hard read errors are always caught, cache or not.</div>
+<div class="mi-body" id="mif-prodr"><b>Optional in PRO, detects a failing card.</b> After verifying the copies, INGESTO reads the <b>source a second time</b> and checks it still returns the same data. A card that gives different bytes on re-read is dying, and those files are flagged as suspect (and left out of the checksum list). <b>Limit:</b> the second read only reaches the card if the data no longer sits in the OS RAM cache. That is the case on real offloads (footage larger than your RAM), but <b>not guaranteed on a small test copy on a high-RAM machine</b>. It roughly doubles verify time. Hard read errors are always caught, cache or not.</div>
 </div>
 
 <button class="mi-close" onclick="hideModesInfo()">Got it</button>
@@ -1938,10 +1938,10 @@ Save
 <div class="mi-body"><b>Auto (default).</b> INGESTO scans your destinations and picks the next free number, so cards get consecutive numbers even across sessions. It rescans automatically whenever a destination is added or a copy finishes.</div>
 </div>
 <div class="mi-row">
-<div class="mi-body"><b>Manual override.</b> Typing a number, or using +/−, locks the counter to that value. It stays locked until you click <b>Auto</b> again, which rescans the destinations and returns to automatic mode.</div>
+<div class="mi-body" id="mif-ci2"><b>Manual override.</b> Typing a number, or using +/−, locks the counter to that value. It stays locked until you click <b>Auto</b> again, which rescans the destinations and returns to automatic mode.</div>
 </div>
 <div class="mi-row">
-<div class="mi-body"><b>How it is written.</b> Pick the number of digits. It is a <b>minimum</b>, not a maximum: after 99 comes 100, never 00. Changing it does not disturb folders already on your drives, and it does not restart the counter.
+<div class="mi-body" id="mif-ci3"><b>How it is written.</b> Pick the number of digits. It is a <b>minimum</b>, not a maximum: after 99 comes 100, never 00. Changing it does not disturb folders already on your drives, and it does not restart the counter.
 <div class="counter-pad" id="counter-pad">
 <button type="button" class="cpad" data-w="2" onclick="setCounterWidth(2)"></button>
 <button type="button" class="cpad" data-w="3" onclick="setCounterWidth(3)"></button>
@@ -1966,7 +1966,7 @@ Save
 <div class="mi-h" style="color:var(--pro);">PRO mode, advanced use</div>
 <div class="mi-sub">Not recommended for most users.</div>
 <div class="mi-row" style="border-top:none;">
-<div class="mi-body">PRO does everything <b>SECURE</b> does, and also writes a <b>checksum list</b> in each destination folder for later re-verification. It's meant for specific archival / hand-off workflows where you carry those lists into another tool.<br><br>For normal ingest, <b>SECURE already guarantees your copies bit-for-bit</b>, so you do not need PRO. PRO is slower (especially in MD5), adds extra files to your folders, and assumes you know why you want checksum lists.</div>
+<div class="mi-body" id="mif-prowarn">PRO does everything <b>SECURE</b> does, and also writes a <b>checksum list</b> in each destination folder for later re-verification. It's meant for specific archival / hand-off workflows where you carry those lists into another tool.<br><br>For normal ingest, <b>SECURE already guarantees your copies bit-for-bit</b>, so you do not need PRO. PRO is slower (especially in MD5), adds extra files to your folders, and assumes you know why you want checksum lists.</div>
 </div>
 <label class="pw-chk"><input type="checkbox" id="pro-warn-chk"> Don't show this again</label>
 <div class="pw-actions">
@@ -2179,7 +2179,7 @@ Then open the app and subscribe to the topic above. Pick a long, hard-to-guess t
 <div class="set-desc">Hands each card, one at a time, to a script of yours</div>
 <div class="set-details" id="handoff-details">
 <div class="set-field" style="align-items:flex-start;"><label for="set-handoff" style="padding-top:9px;">Command</label><input type="text" id="set-handoff" placeholder="(command to run)" oninput="onHandoffField()"></div>
-<div class="set-hint">Runs <b>once per card</b>, after the ingest, with the path to a JSON document as its <b>last argument</b>. The document says where the card is, what was copied where, what was verified, and answers <b>safeToErase</b>. It lives in a temporary folder and is deleted when your command returns. Nothing is written on the card or in the destination.<br>⚠ This executes exactly what you type, and the document is meant to be read by a script that may erase a card. Only enter commands you trust.</div>
+<div class="set-hint" id="set-hint-handoff">Runs <b>once per card</b>, after the ingest, with the path to a JSON document as its <b>last argument</b>. The document says where the card is, what was copied where, what was verified, and answers <b>safeToErase</b>. It lives in a temporary folder and is deleted when your command returns. Nothing is written on the card or in the destination.<br>⚠ This executes exactly what you type, and the document is meant to be read by a script that may erase a card. Only enter commands you trust.</div>
 <div style="margin-top:10px;">
 <button class="set-test" onclick="handoffDryRun()">Dry run</button>
 <span class="set-test-res" id="set-handoff-res"></span>
