@@ -1552,6 +1552,8 @@ textarea.mdn-src::placeholder{color:#6f757f;}
 
 
 </style>
+<script src="lang/zh-CN.js"></script>
+<script src="i18n.js"></script>
 </head>
 <body>
 <div id="app">
@@ -2095,6 +2097,14 @@ Save
 <div id="settings-ov" class="modes-info-ov-like" onclick="if(event.target===this)closeSettings()">
 <div class="mi-card" style="max-width:520px;max-height:82vh;overflow-y:auto;">
 <div class="mi-h">Settings</div>
+
+<div class="set-section" id="set-lang-sec">
+<div class="set-sec-title" style="margin-bottom:4px;">Language</div>
+<div class="set-desc">Choose the interface language.</div>
+<div class="set-details" style="display:block;">
+<div class="set-field"><label for="set-language">Language</label><select id="set-language" data-i18n-skip style="flex:1;background:var(--bg2);border:1px solid #26262c;border-radius:var(--rs);padding:9px 11px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;"><option value="en">English</option><option value="zh-CN">简体中文</option></select></div>
+</div>
+</div>
 
 <div class="set-section">
 <div class="set-hd"><label class="switch"><input type="checkbox" aria-label="Card Tracking" id="sentinel-toggle" onchange="onSentinelToggle(this)"><span class="slider"></span></label><span class="set-sec-title">Card Tracking</span></div>
