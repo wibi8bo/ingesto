@@ -186,11 +186,38 @@
     sel.addEventListener('change', function () { setLanguage(sel.value); });
   }
 
+  /* ── 原生 confirm / alert ──
+   * 原生对话框不属于 DOM，MutationObserver 够不到。中文模式下包装这两个
+   * 函数：先把消息过一遍词典再弹出；英文模式恢复原引用。 */
+  var nativeConfirm = window.confirm;
+  var nativeAlert = window.alert;
+  var dialogsWrapped = false;
+
+  function wrapDialogs() {
+    if (dialogsWrapped) return;
+    dialogsWrapped = true;
+    window.confirm = function (msg) {
+      var hit = translateString(msg);
+      return nativeConfirm.call(window, hit == null ? msg : hit);
+    };
+    window.alert = function (msg) {
+      var hit = translateString(msg);
+      nativeAlert.call(window, hit == null ? msg : hit);
+    };
+  }
+  function unwrapDialogs() {
+    if (!dialogsWrapped) return;
+    dialogsWrapped = false;
+    window.confirm = nativeConfirm;
+    window.alert = nativeAlert;
+  }
+
   function apply(lang) {
     current = lang;
     restoreAll();                       // 先整体还原为英文
     dict = (lang === 'en') ? null : loadDict(lang);
     patterns = compilePatterns(dict);
+    if (dict) wrapDialogs(); else unwrapDialogs();
     if (dict && document.body) walk(document.body);
     syncSelect();
     startObserver();
