@@ -488,6 +488,12 @@ window.INGESTO_LANG_ZH_CN = {
 
     /* ── I. 杂项 ── */
     "CAMERA": "摄影机",
+    "This session": "本次会话",
+    "Names are added here when an ingest starts.": "导入开始后，名字会自动出现在这里。",
+
+    /* ── Kiosk PIN 副文 ── */
+    "For this session only. Quitting ingesto leaves kiosk mode and clears the PIN.": "仅对本次会话有效。退出 ingesto 即离开 kiosk 模式并清除 PIN。",
+    "Forgotten it? Quit and reopen ingesto, that leaves kiosk mode.": "忘记了？退出并重新打开 ingesto，即可离开 kiosk 模式。",
 
     /* ── Kiosk 结果屏 ── */
     "Not set up yet": "尚未设置",
@@ -548,7 +554,22 @@ window.INGESTO_LANG_ZH_CN = {
     "Back to standard mode (PIN)": "返回标准模式（PIN）",
 
     /* ── 批次 3：动态 aria / title ── */
-    "Reveal on the destination": "在目标位置上显示"
+    "Reveal on the destination": "在目标位置上显示",
+
+    /* ── 摄影师下拉 / 备注编辑器 / 计数器按钮 ── */
+    "Operators of this session": "本次会话的摄影师",
+    "Bold": "加粗",
+    "Italic": "斜体",
+    "Underline": "下划线",
+    "Strikethrough": "删除线",
+    "Heading": "标题",
+    "Bulleted list": "项目符号列表",
+    "Numbered list": "编号列表",
+    "Checklist": "任务清单",
+    "Note format": "备注格式",
+    "Formatted text": "富文本",
+    "Markdown source": "Markdown 源码",
+    "Manual override. Click to go back to auto": "手动覆盖。点击恢复自动"
   },
 
   patterns: [
@@ -658,6 +679,10 @@ window.INGESTO_LANG_ZH_CN = {
     ["^Copy every (.+) file$", "拷贝全部 $1 文件"],
     ["^Copy ([A-Z0-9]+) files$", "拷贝 $1 文件"],
     ["^INGESTO v(.+) is available\\. You're on v(.+)\\.$", "INGESTO v$1 已发布。你当前使用的是 v$2。"],
+    /* 计数器自动按钮 / 计数器信息（data-tip、#counter-max-info） */
+    ["^Manual override\\. Auto would give (.+)$", "手动覆盖。自动编号将为 $1"],
+    ["^Last: (.+) → next: (.+)$", "上一个：$1 → 下一个：$2"],
+    ["^last: (.+)$", "上一个：$1"],
     /* Kiosk 结果屏动态 */
     ["^INGESTO would not start: (.*)$", "INGESTO 未能启动：$1"],
     ["^(\\d+) files? (?:were|was) read differently the second time\\.$", "有 $1 个文件第二次读取时结果不同。"],

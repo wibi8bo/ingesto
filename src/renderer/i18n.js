@@ -8,8 +8,8 @@
  * 新增一种语言 = 在 lang/ 目录放一个 xx.js（把词典挂到 window），
  * 在下方 LANGS 里登记，并在设置面板的语言下拉框里加一个 option。
  *
- * 覆盖范围：文本节点、title / placeholder / aria-label / data-tip
- * 属性、按元素 id 的整段 innerHTML 覆盖，以及由 JS 动态插入的
+ * 覆盖范围：文本节点、title / placeholder / aria-label / data-tip /
+ * data-ph 属性、按元素 id 的整段 innerHTML 覆盖，以及由 JS 动态插入的
  * 内容（MutationObserver 自动跟进翻译）。
  * 不覆盖：生成的报告文件、系统通知（由主进程产生）。
  * ============================================================ */
@@ -24,8 +24,9 @@
     'zh-CN': { label: '简体中文', dictName: 'INGESTO_LANG_ZH_CN' }
   };
 
-  /* 会被翻译的属性 */
-  var ATTRS = ['title', 'placeholder', 'aria-label', 'data-tip'];
+  /* 会被翻译的属性。data-ph 是富文本备注框（Aa 模式）占位符：
+   * CSS 用 content:attr(data-ph) 渲染，文本节点翻译够不到它。 */
+  var ATTRS = ['title', 'placeholder', 'aria-label', 'data-tip', 'data-ph'];
 
   /* 整个子树都不翻译的标签 */
   var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, SVG: 1, NOSCRIPT: 1, IFRAME: 1, OBJECT: 1 };
