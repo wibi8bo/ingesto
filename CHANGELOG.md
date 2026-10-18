@@ -2,6 +2,26 @@
 
 All notable changes to ingesto. Versions before 2.5.5 are not listed here.
 
+## 2.8.1 (2026-10-19)
+First release of this fork: complete Chinese localization on top of 2.8.0.
+The copy engine, the verification and the reports are unchanged in substance.
+
+- Full zh-CN translation of the interface, including the copy progress area,
+  every dialog and the HTML report (the report follows the language at export
+  time; CSV and JSON reports stay in English).
+- Language switch (English / 简体中文) in Settings, persisted with the other
+  preferences. A fresh install starts in the system language; Chinese
+  variants open in Chinese.
+- Dates read year-first in Chinese (2026.10.19) where a full date is shown;
+  record rows keep the compact DD.MM HH:MM form, reordered to MM.DD.
+- The operator and camera fields accept Chinese and other non-reserved
+  characters: only filesystem-invalid characters are stripped now.
+- Volumes named "Recovery" no longer appear in the mounted-volume list.
+- The notes editor shows its placeholder again after all text is deleted;
+  the operator placeholder reads "Name" everywhere, matching kiosk.
+- macOS build script no longer attempts to sign with a non-distribution
+  certificate (it used to hang on a keychain authorisation prompt).
+
 ## 2.8.0 (2026-10-13)
 - Electron 44. **macOS 13 Ventura or later is now required** (the 2.7
   versions still run on macOS 12).

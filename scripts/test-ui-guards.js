@@ -110,12 +110,15 @@ console.log('\nkiosk fields are cleaned like the standard window');
 
   // And again when Start is pressed, for a value that never went through an
   // input event: restored, pasted by a script, set programmatically.
+  // Same rule as the field filter: filesystem-illegal characters stripped,
+  // everything else (spaces, dashes, CJK names) passes — cleanSegment() in
+  // main.js still trims and cleans each folder level on the way to the drive.
   const start = extractFn(REND, 'kioskStart');
-  ok(/replace\(\/\[\^A-Za-z0-9\]\/g,\s*''\)/.test(start),
+  ok(/replace\(\/\[\/\\\\:\*\?"<>\|\\x00-\\x1f\]\/g/.test(start),
      'kioskStart cleans the values again rather than trusting the fields');
-  const clean = x => String(x == null ? '' : x).replace(/[^A-Za-z0-9]/g, '');
-  ok(clean('Jean Marc') === 'JeanMarc' && clean('A/B') === 'AB' && clean('') === '',
-     'the rule itself: letters and digits only');
+  const clean = x => String(x == null ? '' : x).replace(/[/\\:*?"<>|\x00-\x1f]/g, '');
+  ok(clean('王建国') === '王建国' && clean('Jean/Marc') === 'JeanMarc' && clean('a:b') === 'ab' && clean('') === '',
+     'the rule itself: filesystem-illegal stripped, non-Latin names pass');
 }
 
 // ── 4. What cannot be done while an ingest is in flight ─────────────────────

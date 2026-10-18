@@ -1,6 +1,6 @@
 {
   "name": "ingesto",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "engines": {
     "node": ">=20.19"
   },
@@ -10,11 +10,11 @@
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "https://github.com/noar-justedit/ingesto.git"
+    "url": "https://github.com/wibi8bo/ingesto.git"
   },
-  "homepage": "https://github.com/noar-justedit/ingesto",
+  "homepage": "https://github.com/wibi8bo/ingesto",
   "bugs": {
-    "url": "https://github.com/noar-justedit/ingesto/issues"
+    "url": "https://github.com/wibi8bo/ingesto/issues"
   },
   "scripts": {
     "start": "electron .",

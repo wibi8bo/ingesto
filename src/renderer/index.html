@@ -1457,8 +1457,8 @@ body.tf-on #sess-card{display:none !important;}
    choisi dans un menu, les notes en markdown. Valide sur maquette le 13.10.
    Le bouton Profile reprend exactement le remplissage du champ voisin, sinon
    la ligne a deux hauteurs. */
-.row3{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 88px;gap:8px;}
-.sif-grid.row3{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 88px;gap:8px;}
+.row3{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 100px;gap:8px;}
+.sif-grid.row3{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 100px;gap:8px;}
 .k-body .row3{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 112px;gap:10px;}
 .row3 > *{min-width:0;}
 .row3 .mf-label,.row3 .sif-label,.row3 .k-lbl{white-space:nowrap;overflow:hidden;}
@@ -1552,6 +1552,8 @@ textarea.mdn-src::placeholder{color:#6f757f;}
 
 
 </style>
+<script src="lang/zh-CN.js"></script>
+<script src="i18n.js"></script>
 </head>
 <body>
 <div id="app">
@@ -1591,7 +1593,7 @@ ondragover="onDZ(event,'src')" ondragleave="offDZ(event,'src')" ondrop="dropDZ(e
 <div class="meta-sec lockable" id="global-meta-sec">
 <div class="row3">
 <div class="mf"><div class="mf-label">Operator</div>
-<input id="meta-cam" type="text" placeholder="Operator" data-opcb
+<input id="meta-cam" type="text" placeholder="Name" data-opcb
 oninput="sanitizeMeta(this);persistPrefs();syncDefaultsToSources()"></div>
 <div class="mf"><div class="mf-label">Camera</div>
 <input id="meta-model" type="text" placeholder="Camera"
@@ -1891,7 +1893,7 @@ Save
 
 <div class="mi-row">
 <span class="mi-badge" style="background:var(--blue-d);color:var(--blue);">SIZE CHECK</span>
-<div class="mi-body"><b>Copy + size check.</b> After copying, INGESTO compares the byte size of each source and destination file. Catches incomplete or truncated copies (disconnected drive, full disk, interrupted write) at almost no time cost. It does <b>not</b> detect silent bit-level corruption, because the content itself isn't read back.</div>
+<div class="mi-body" id="mif-size"><b>Copy + size check.</b> After copying, INGESTO compares the byte size of each source and destination file. Catches incomplete or truncated copies (disconnected drive, full disk, interrupted write) at almost no time cost. It does <b>not</b> detect silent bit-level corruption, because the content itself isn't read back.</div>
 </div>
 
 <div class="mi-row">
@@ -1906,7 +1908,7 @@ Save
 
 <div class="mi-row">
 <span class="mi-badge" style="background:rgba(168,128,255,.16);color:var(--pro);">PRO · Double read</span>
-<div class="mi-body"><b>Optional in PRO, detects a failing card.</b> After verifying the copies, INGESTO reads the <b>source a second time</b> and checks it still returns the same data. A card that gives different bytes on re-read is dying, and those files are flagged as suspect (and left out of the checksum list). <b>Limit:</b> the second read only reaches the card if the data no longer sits in the OS RAM cache. That is the case on real offloads (footage larger than your RAM), but <b>not guaranteed on a small test copy on a high-RAM machine</b>. It roughly doubles verify time. Hard read errors are always caught, cache or not.</div>
+<div class="mi-body" id="mif-prodr"><b>Optional in PRO, detects a failing card.</b> After verifying the copies, INGESTO reads the <b>source a second time</b> and checks it still returns the same data. A card that gives different bytes on re-read is dying, and those files are flagged as suspect (and left out of the checksum list). <b>Limit:</b> the second read only reaches the card if the data no longer sits in the OS RAM cache. That is the case on real offloads (footage larger than your RAM), but <b>not guaranteed on a small test copy on a high-RAM machine</b>. It roughly doubles verify time. Hard read errors are always caught, cache or not.</div>
 </div>
 
 <button class="mi-close" onclick="hideModesInfo()">Got it</button>
@@ -1936,10 +1938,10 @@ Save
 <div class="mi-body"><b>Auto (default).</b> INGESTO scans your destinations and picks the next free number, so cards get consecutive numbers even across sessions. It rescans automatically whenever a destination is added or a copy finishes.</div>
 </div>
 <div class="mi-row">
-<div class="mi-body"><b>Manual override.</b> Typing a number, or using +/−, locks the counter to that value. It stays locked until you click <b>Auto</b> again, which rescans the destinations and returns to automatic mode.</div>
+<div class="mi-body" id="mif-ci2"><b>Manual override.</b> Typing a number, or using +/−, locks the counter to that value. It stays locked until you click <b>Auto</b> again, which rescans the destinations and returns to automatic mode.</div>
 </div>
 <div class="mi-row">
-<div class="mi-body"><b>How it is written.</b> Pick the number of digits. It is a <b>minimum</b>, not a maximum: after 99 comes 100, never 00. Changing it does not disturb folders already on your drives, and it does not restart the counter.
+<div class="mi-body" id="mif-ci3"><b>How it is written.</b> Pick the number of digits. It is a <b>minimum</b>, not a maximum: after 99 comes 100, never 00. Changing it does not disturb folders already on your drives, and it does not restart the counter.
 <div class="counter-pad" id="counter-pad">
 <button type="button" class="cpad" data-w="2" onclick="setCounterWidth(2)"></button>
 <button type="button" class="cpad" data-w="3" onclick="setCounterWidth(3)"></button>
@@ -1964,7 +1966,7 @@ Save
 <div class="mi-h" style="color:var(--pro);">PRO mode, advanced use</div>
 <div class="mi-sub">Not recommended for most users.</div>
 <div class="mi-row" style="border-top:none;">
-<div class="mi-body">PRO does everything <b>SECURE</b> does, and also writes a <b>checksum list</b> in each destination folder for later re-verification. It's meant for specific archival / hand-off workflows where you carry those lists into another tool.<br><br>For normal ingest, <b>SECURE already guarantees your copies bit-for-bit</b>, so you do not need PRO. PRO is slower (especially in MD5), adds extra files to your folders, and assumes you know why you want checksum lists.</div>
+<div class="mi-body" id="mif-prowarn">PRO does everything <b>SECURE</b> does, and also writes a <b>checksum list</b> in each destination folder for later re-verification. It's meant for specific archival / hand-off workflows where you carry those lists into another tool.<br><br>For normal ingest, <b>SECURE already guarantees your copies bit-for-bit</b>, so you do not need PRO. PRO is slower (especially in MD5), adds extra files to your folders, and assumes you know why you want checksum lists.</div>
 </div>
 <label class="pw-chk"><input type="checkbox" id="pro-warn-chk"> Don't show this again</label>
 <div class="pw-actions">
@@ -2096,6 +2098,14 @@ Save
 <div class="mi-card" style="max-width:520px;max-height:82vh;overflow-y:auto;">
 <div class="mi-h">Settings</div>
 
+<div class="set-section" id="set-lang-sec">
+<div class="set-sec-title" style="margin-bottom:4px;">Language</div>
+<div class="set-desc">Choose the interface language.</div>
+<div class="set-details" style="display:block;">
+<div class="set-field"><label for="set-language">Language</label><select id="set-language" data-i18n-skip style="flex:1;background:var(--bg2);border:1px solid #26262c;border-radius:var(--rs);padding:9px 11px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;"><option value="en">English</option><option value="zh-CN">简体中文</option></select></div>
+</div>
+</div>
+
 <div class="set-section">
 <div class="set-hd"><label class="switch"><input type="checkbox" aria-label="Card Tracking" id="sentinel-toggle" onchange="onSentinelToggle(this)"><span class="slider"></span></label><span class="set-sec-title">Card Tracking</span></div>
 <div class="set-desc">Writes a small tag on the source card to detect it wasn't reformatted between two ingests.</div>
@@ -2169,7 +2179,7 @@ Then open the app and subscribe to the topic above. Pick a long, hard-to-guess t
 <div class="set-desc">Hands each card, one at a time, to a script of yours</div>
 <div class="set-details" id="handoff-details">
 <div class="set-field" style="align-items:flex-start;"><label for="set-handoff" style="padding-top:9px;">Command</label><input type="text" id="set-handoff" placeholder="(command to run)" oninput="onHandoffField()"></div>
-<div class="set-hint">Runs <b>once per card</b>, after the ingest, with the path to a JSON document as its <b>last argument</b>. The document says where the card is, what was copied where, what was verified, and answers <b>safeToErase</b>. It lives in a temporary folder and is deleted when your command returns. Nothing is written on the card or in the destination.<br>⚠ This executes exactly what you type, and the document is meant to be read by a script that may erase a card. Only enter commands you trust.</div>
+<div class="set-hint" id="set-hint-handoff">Runs <b>once per card</b>, after the ingest, with the path to a JSON document as its <b>last argument</b>. The document says where the card is, what was copied where, what was verified, and answers <b>safeToErase</b>. It lives in a temporary folder and is deleted when your command returns. Nothing is written on the card or in the destination.<br>⚠ This executes exactly what you type, and the document is meant to be read by a script that may erase a card. Only enter commands you trust.</div>
 <div style="margin-top:10px;">
 <button class="set-test" onclick="handoffDryRun()">Dry run</button>
 <span class="set-test-res" id="set-handoff-res"></span>
@@ -2413,6 +2423,16 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   // saved values are written into them.
   try{ fieldsInit(document); }catch(e){ console.error('fieldsInit', e); }
   const prefs=(await window.ingesto.loadPrefs())||{};   // a failed read must not stop the boot
+  // Language: the i18n engine applies its synchronous localStorage cache as
+  // early as possible (no English flash); the prefs file is the authoritative
+  // copy. If they disagree (new machine, cleared web storage), the file wins,
+  // and setLanguage() refreshes the localStorage cache in the same move.
+  try {
+    if (prefs.language && window.INGESTO_I18N &&
+        prefs.language !== window.INGESTO_I18N.getLanguage()) {
+      window.INGESTO_I18N.setLanguage(prefs.language);
+    }
+  } catch(e) { /* 语言校准失败不影响启动 */ }
   // Applied directly, not through setNoteMode(): that one saves the
   // preferences, and a save now would write them before they are restored.
   if(prefs.noteMode==='md'){ S.noteMode='md'; document.querySelectorAll('.mdn').forEach(mdnApplyMode); }
@@ -2583,11 +2603,19 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   loadVolumes();
 });
 
-// Item 7 — OPERATOR / CAMERA MODEL: allow only [A-Za-z0-9]; strip spaces & specials live.
+// Item 7 — OPERATOR / CAMERA MODEL: filename-safe input, applied live.
+// The original build stripped everything outside [A-Za-z0-9], which locked out
+// anyone typing a non-Latin name (Chinese, Japanese, accented Latin…). The
+// value reaches a folder name through {operator}/{camera}, so what must stay
+// out is exactly what a filesystem forbids — not what is non-ASCII: path
+// separators, the Windows-illegal set and control characters are stripped
+// here; everything else (spaces, dashes, dots, CJK) passes. The engine's
+// cleanSegment() / resolveTplSegs() still clean and trim on the way to the
+// drive, so the field filter and the folder-name rules stay consistent.
 function sanitizeMeta(el){
   const start = el.selectionStart;
   const before = el.value;
-  const after  = before.replace(/[^A-Za-z0-9]/g,'');
+  const after  = before.replace(/[/\\:*?"<>|\x00-\x1f]/g,'');
   if (after !== before){
     el.value = after;
     // keep caret from jumping to the end when a char is stripped
@@ -2650,6 +2678,10 @@ document.addEventListener('focusout', (e) => { if(e.target && e.target.tagName &
 function persistPrefsNow(){
   window.ingesto.savePrefs({
     presets:S.presets,counter:S.counter,counterOverride:S.counterOverride,
+    // 界面语言与其他设置走同一条持久化链路（ingesto-prefs.json）。
+    // localStorage 只作引擎启动早期的同步缓存，prefs 文件才是权威源。
+    language:(window.INGESTO_I18N && window.INGESTO_I18N.getLanguage &&
+              window.INGESTO_I18N.getLanguage()) || 'en',
     mode:S.mode,
     proAlgo:S.proAlgo,
     proDoubleRead:S.proDoubleRead,
@@ -3994,7 +4026,7 @@ function renderSourceInfoCards(){
             <div class="sif-label">OPERATOR</div>
             <input class="sif-input" type="text" value="${esc(op)}" data-opcb
               aria-label="Operator of card ${esc(src.name)}"
-              placeholder="Operator"
+              placeholder="Name"
               oninput="sanitizeMeta(this);updateSrcField(${i},'operator',this.value)">
           </div>
           <div>
@@ -4234,6 +4266,17 @@ function mdnFromRich(box){
   box._typing = true;
   try{ ta.dispatchEvent(new Event('input', { bubbles:true })); } finally { box._typing = false; }
 }
+// Chromium keeps a stray <br> (or <p><br></p>) in a contenteditable after the
+// last character is deleted. The element is then no longer :empty, so the
+// CSS-drawn placeholder never comes back — a divergence from a native
+// <textarea>, which shows its placeholder as soon as the value is empty.
+// Normalising the empty state lets the existing :empty rule work in every
+// deletion path (backspace, select-all + delete, undo to the start, empty
+// paste), and keeps a lone leftover <br> out of the exported markdown.
+function mdnNormalizeEmpty(ed){
+  if (ed.querySelector('img,ul,ol,h3')) return;
+  if (!ed.textContent.trim()) ed.innerHTML = '';
+}
 function mdnCommand(box, cmd){
   if(box.querySelector('textarea').disabled) return;
   if(box.dataset.mode === 'md'){
@@ -4300,7 +4343,7 @@ function mdnInit(root){
       b.addEventListener('click', () => mdnCommand(box, b.dataset.cmd));
     });
     box.querySelectorAll('.mdn-sw button').forEach(b => b.addEventListener('click', () => setNoteMode(b.dataset.m)));
-    ed.addEventListener('input', () => mdnFromRich(box));
+    ed.addEventListener('input', () => { mdnNormalizeEmpty(ed); mdnFromRich(box); });
     // Plain text only: a paste from a web page or a mail would bring fonts,
     // links and images that markdown cannot keep.
     ed.addEventListener('paste', e => {
@@ -6201,7 +6244,7 @@ function sessDetails(row){
   const who=[r.operator, r.cam, r.pp].filter(x=>x).join(' · ');
   const cell=(k,v,wide)=>`<div class="sd-cell${wide?' sd-wide':''}"><div class="sd-k">${k}</div><div class="sd-v">${v}</div></div>`;
   return `<div class="sess-det">`
-    + cell('DATE', esc(r.date||'-'))
+    + cell('DATE', esc(fmtRecDate(r)||'-'))
     + cell('FILES', esc(String(r.files!=null?r.files:'-')))
     + cell('SIZE', bytes?esc(fmtSize(bytes)):'-')
     + cell('DURATION', total?esc(fmtReportDur(total)):'-')
@@ -8260,8 +8303,20 @@ function reportModeLabel(r){
 function reportModeClass(r){ return {fast:'m-fast',normal:'m-sizecheck',slow:'m-secure',pro:'m-pro'}[r.mode]||''; }
 function fmtReportDate(iso){
   try{ const d=new Date(iso),p=x=>String(x).padStart(2,'0');
+    // Year-first is the common reading order for zh-CN; en keeps DD.MM.YYYY.
+    if(window.INGESTO_I18N && INGESTO_I18N.getLanguage()==='zh-CN')
+      return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
     return `${p(d.getDate())}.${p(d.getMonth()+1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
   }catch(_){ return iso||'-'; }
+}
+// Records store their date as the compact shipped string (DD.MM HH:MM).
+// zh-CN reads month-first (MM.DD HH:MM); anything that does not parse keeps
+// the shipped format, and the CSV/JSON data files are untouched.
+function fmtRecDate(r){
+  const s=(r&&r.date)||'-';
+  if(!(window.INGESTO_I18N && INGESTO_I18N.getLanguage()==='zh-CN')) return s;
+  const m=/^(\d{1,2})\.(\d{1,2}) (\d{2}:\d{2})$/.exec(s);
+  return m ? `${m[2]}.${m[1]} ${m[3]}` : s;
 }
 async function updateReports(R, base, run){
   // Which files this run writes was decided when START was pressed, not now.
@@ -8415,6 +8470,56 @@ async function gzipB64(str){
   return btoa(bin);
 }
 async function buildReportHtml(created, updated, destPath, records){
+  // The report is written in the language the app runs in AT EXPORT TIME:
+  // reopening the file later never re-renders it, so the copy on the drive
+  // keeps the language of the run that last touched it.
+  // Kept apart from the UI dictionary on purpose — report headers, tiles and
+  // legend are their own register ("V1", "COPY"), and sharing short keys like
+  // "CARD" with the main UI would force one translation onto two contexts.
+  const REPORT_I18N = {
+    en: { reportTitle:'INGESTO · Ingest Report', heading:'INGEST REPORT',
+      created:'Created', lastUpdate:'last update', exportPdf:'\u2b07 Export PDF',
+      card:'CARD', cards:'CARDS', files:'FILES', totalSize:'TOTAL SIZE',
+      withErrors:'WITH ERRORS', suspect:'SUSPECT', clean:'CLEAN',
+      thDate:'DATE', thCard:'CARD', thOperator:'OPERATOR', thCam:'CAM', thMode:'MODE',
+      thFiles:'FILES', thSize:'SIZE', thResult:'RESULT', thNote:'NOTE',
+      timingTitle:'Copy / 1st verify (destination) / 2nd verify (source re-read)',
+      legendCopy:'copy pass', legendV1:'read back on the destination', legendV2:'second read on the source',
+      legendClick:'Click \u25b8 on a line to list the files.',
+      footer:'Written by ingesto. This file lives in the destination and is updated after each ingest. Only <b>Secure</b> and <b>PRO</b> read the copies back: a line in <b>Fast</b> or <b>Size check</b> says what was copied, not that it was verified.',
+      showFiles:'Show files', lightEntry:'Recorded as a light entry, no file list', htmlLang:'en',
+      // The expanded file-list header lives in the report's own script and is
+      // built only when a row is opened, so it is injected here, in the
+      // language of the run that wrote the file.
+      filesHd:(n)=>n+' file'+(n>1?'s':'')+' ingested',
+      noDecompHd:'File list unavailable in this browser',
+      noDecompBody:'The list is stored compressed. Open this report in a recent browser (Safari 16.4+, Chrome, Firefox, Edge) to read it.',
+      badHd:'File list could not be read',
+      badBody:'The stored data is damaged. The table above is unaffected.' },
+    'zh-CN': { reportTitle:'INGESTO · 导入报告', heading:'导入报告',
+      created:'创建于', lastUpdate:'最后更新', exportPdf:'\u2b07 导出 PDF',
+      card:'张卡', cards:'张卡', files:'个文件', totalSize:'总大小',
+      withErrors:'有错误', suspect:'存疑', clean:'无异常',
+      thDate:'日期', thCard:'卡', thOperator:'摄影师', thCam:'摄影机', thMode:'模式',
+      thFiles:'文件', thSize:'大小', thResult:'结果', thNote:'备注',
+      timingTitle:'拷贝 / 目标位置校验 / 源卡双重读取',
+      legendCopy:'拷贝阶段', legendV1:'在目标位置上回读校验', legendV2:'源卡双重读取',
+      legendClick:'点击某行的 ▸ 展开文件列表。',
+      footer:'由 ingesto 写入。本文件存放在目标位置，每次导入后更新。只有 <b>Secure</b> 和 <b>PRO</b> 会回读拷贝内容：<b>Fast</b> 或 <b>Size check</b> 模式的一行只说明拷贝了什么，不代表经过校验。',
+      showFiles:'显示文件', lightEntry:'以轻量条目记录，无文件列表', htmlLang:'zh-CN',
+      filesHd:(n)=>'已导入 '+n+' 个文件',
+      noDecompHd:'此浏览器无法显示文件列表',
+      noDecompBody:'列表以压缩方式存储。请用较新的浏览器（Safari 16.4+、Chrome、Firefox、Edge）打开本报告。',
+      badHd:'无法读取文件列表',
+      badBody:'存储的数据已损坏。上方的表格不受影响。' }
+  };
+  const rLang = (window.INGESTO_I18N && INGESTO_I18N.getLanguage()) || 'en';
+  const R = REPORT_I18N[rLang] || REPORT_I18N.en;
+  const T = k => R[k] || k;
+  // Data rows carry their own strings (mode label, result verdict). Those are
+  // records, rendered through the shared dictionary so the report and the
+  // on-screen summary say the same thing in the same words.
+  const Tx = s => { const hit = window.INGESTO_I18N ? INGESTO_I18N.t(s) : null; return hit == null ? s : hit; };
   const escH=(x)=>String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const totalBytes=records.reduce((a,r)=>a+(r.bytes||0),0);
   // The tiles at the top of the report. Counted from the records themselves,
@@ -8434,8 +8539,8 @@ async function buildReportHtml(created, updated, destPath, records){
     const hasFl = reportFilePairs(r).length>0;
     const chev = !anyFl ? ''
       : hasFl
-      ? `<td class="c-chev" onclick="tgl(${ri})" id="ch-${ri}" title="Show files">\u25b8</td>`
-      : `<td class="c-chev c-mut" title="Recorded as a light entry, no file list">\u00b7</td>`;
+      ? `<td class="c-chev" onclick="tgl(${ri})" id="ch-${ri}" title="${T('showFiles')}">\u25b8</td>`
+      : `<td class="c-chev c-mut" title="${T('lightEntry')}">\u00b7</td>`;
     // modeClass / rclass go into a class attribute unescaped, and files into
     // markup as a number — but records are re-read from the report JSON that
     // lives on the (possibly shared) destination, so a tampered INGESTO_report
@@ -8447,16 +8552,16 @@ async function buildReportHtml(created, updated, destPath, records){
     const rCls    = R_CLASSES.has(r.rclass) ? r.rclass : '';
     const nFiles  = Number.isFinite(+r.files) ? (+r.files|0) : 0;
     const main = `<tr class="rec">`+chev+
-      `<td class="c-num">${escH(r.n)}</td><td class="c-mut">${escH(r.date)}</td>`+
+      `<td class="c-num">${escH(r.n)}</td><td class="c-mut">${escH(fmtRecDate(r))}</td>`+
       `<td>${escH(r.card)}${(r.folder&&r.folder.includes('/'))?`<div class="c-path">${escH(r.folder)}</div>`:''}</td>`+
       // The picture profile rides under the camera rather than in a column of
       // its own: the table already carries eleven columns, and the two belong
       // together anyway.
       `<td class="c-txt">${escH(r.operator)}</td>`+
       `<td>${escH(r.cam)}${r.pp?`<div class="c-path">${escH(r.pp)}</div>`:''}</td>`+
-      `<td class="${modeCls}">${escH(r.mode)}</td>`+
+      `<td class="${modeCls}">${escH(Tx(r.mode))}</td>`+
       `<td class="c-r">${nFiles}</td><td class="c-r">${fmtSize(r.bytes)}</td>`+
-      `<td><span class="${rCls}">${escH(r.result)}</span></td>`+
+      `<td><span class="${rCls}">${escH(Tx(r.result))}</span></td>`+
       // One compact column rather than three: the table already carries 11
       // columns and three more would crush it. All three values are shown.
       // Phase timings: fixed-width sub-columns so the "/" separators line up
@@ -8500,7 +8605,7 @@ async function buildReportHtml(created, updated, destPath, records){
   // which appear on click, go through decompression.
   const raw=JSON.stringify({created, v:2, records:slim});
   const data=await gzipB64(raw);
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>INGESTO — Ingest Report</title>
+  return `<!doctype html><html lang="${escH(R.htmlLang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escH(T('reportTitle'))}</title>
 <style>:root{color-scheme:dark}*{box-sizing:border-box}
 body{margin:0;background:#0a0b0e;color:#e8eaf0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;}
 .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 34px;display:flex;flex-direction:column;gap:12px;}
@@ -8582,34 +8687,32 @@ tbody tr.rec:nth-child(even) td{background:#fafafa;}
 <div class="card">
 <div class="hd"><div style="flex-grow:1;min-width:0;">
 <div class="brand">ingesto<span>.</span></div>
-<div class="ttl">INGEST REPORT</div>
+<div class="ttl">${escH(T('heading'))}</div>
 <div class="path">${escH(destPath)}</div>
-<div class="meta">Created ${fmtReportDate(created)} &middot; last update ${fmtReportDate(updated)}</div>
-</div><button class="pdf" onclick="_pdf()">&#11015; Export PDF</button></div>
+<div class="meta">${escH(T('created'))} ${fmtReportDate(created)} &middot; ${escH(T('lastUpdate'))} ${fmtReportDate(updated)}</div>
+</div><button class="pdf" onclick="_pdf()">${T('exportPdf')}</button></div>
 <div class="tiles">
-<div class="tile"><b>${records.length}</b><span>CARD${records.length>1?'S':''}</span></div>
-<div class="tile"><b>${totalFiles}</b><span>FILES</span></div>
-<div class="tile"><b>${fmtSize(totalBytes)}</b><span>TOTAL SIZE</span></div>
-<div class="tile"><b style="color:${badCount?'#f2555a':(suspectCount?'#f2a03d':'#35c98b')};">${badCount?badCount:(suspectCount?suspectCount:records.length)}</b><span>${badCount?'WITH ERRORS':(suspectCount?'SUSPECT':'CLEAN')}</span></div>
+<div class="tile"><b>${records.length}</b><span>${escH(T(records.length>1?'cards':'card'))}</span></div>
+<div class="tile"><b>${totalFiles}</b><span>${escH(T('files'))}</span></div>
+<div class="tile"><b>${fmtSize(totalBytes)}</b><span>${escH(T('totalSize'))}</span></div>
+<div class="tile"><b style="color:${badCount?'#f2555a':(suspectCount?'#f2a03d':'#35c98b')};">${badCount?badCount:(suspectCount?suspectCount:records.length)}</b><span>${escH(badCount?T('withErrors'):(suspectCount?T('suspect'):T('clean')))}</span></div>
 </div>
 </div>
 
 <div class="card" style="padding:16px 14px;">
 <div style="overflow-x:auto;">
-<table><thead><tr>${anyFl?'<th class="c-chev"></th>':''}<th>#</th><th>DATE</th><th>CARD</th><th>OPERATOR</th><th>CAM</th><th>MODE</th><th class="c-r">FILES</th><th class="c-r">SIZE</th><th>RESULT</th><th class="c-r" title="Copy / 1st verify (destination) / 2nd verify (source re-read)" style="white-space:nowrap"><span class="tv t-copy">COPY</span><span class="t-sep">/</span><span class="tv t-v1">V1</span><span class="t-sep">/</span><span class="tv t-v2">V2</span></th><th>NOTE</th></tr></thead>
+<table><thead><tr>${anyFl?'<th class="c-chev"></th>':''}<th>#</th><th>${escH(T('thDate'))}</th><th>${escH(T('thCard'))}</th><th>${escH(T('thOperator'))}</th><th>${escH(T('thCam'))}</th><th>${escH(T('thMode'))}</th><th class="c-r">${escH(T('thFiles'))}</th><th class="c-r">${escH(T('thSize'))}</th><th>${escH(T('thResult'))}</th><th class="c-r" title="${escH(T('timingTitle'))}" style="white-space:nowrap"><span class="tv t-copy">COPY</span><span class="t-sep">/</span><span class="tv t-v1">V1</span><span class="t-sep">/</span><span class="tv t-v2">V2</span></th><th>${escH(T('thNote'))}</th></tr></thead>
 <tbody>${rows}</tbody></table>
 </div>
 <div class="legend">
-<span><b style="color:#35c98b;">COPY</b> copy pass</span>
-<span><b style="color:#4d90f0;">V1</b> read back on the destination</span>
-<span><b style="color:#a880ff;">V2</b> second read on the source</span>
-${anyFl?'<span>Click ▸ on a line to list the files.</span>':''}
+<span><b style="color:#35c98b;">COPY</b> ${escH(T('legendCopy'))}</span>
+<span><b style="color:#4d90f0;">V1</b> ${escH(T('legendV1'))}</span>
+<span><b style="color:#a880ff;">V2</b> ${escH(T('legendV2'))}</span>
+${anyFl?`<span>${escH(T('legendClick'))}</span>`:''}
 </div>
 </div>
 
-<div class="ft">Written by ingesto. This file lives in the destination and is updated after each ingest.
-Only <b>Secure</b> and <b>PRO</b> read the copies back: a line in <b>Fast</b> or <b>Size check</b> says what was
-copied, not that it was verified.</div>
+<div class="ft">${T('footer')}</div>
 </div>
 <script id="ingesto-report-data" type="application/gzip+base64">${data}<\/script>
 <script>var _D=null,_B=[],_P=null;function _sz(b){if(!b)return'0 B';var u=['B','KB','MB','GB','TB'],i=0;while(b>=1024&&i<4){b/=1024;i++;}return(i?b.toFixed(1):Math.round(b))+' '+u[i];}
@@ -8648,10 +8751,10 @@ function _fill(i){
   var r=(_D.records||[])[i]||{},f=r.f||[],h='';
   var row=document.getElementById('det-'+i); if(!row) return;
   var c=row.getElementsByTagName('td')[1];
-  if(_D._noDecomp){c.innerHTML='<div class="fl-hd">File list unavailable in this browser</div><div class="fl-list"><div class="fl-row">The list is stored compressed. Open this report in a recent browser (Safari 16.4+, Chrome, Firefox, Edge) to read it.</div></div>';_B[i]=1;return;}
-  if(_D._bad){c.innerHTML='<div class="fl-hd">File list could not be read</div><div class="fl-list"><div class="fl-row">The stored data is damaged. The table above is unaffected.</div></div>';_B[i]=1;return;}
+  if(_D._noDecomp){c.innerHTML='<div class="fl-hd">${escH(R.noDecompHd)}</div><div class="fl-list"><div class="fl-row">${escH(R.noDecompBody)}</div></div>';_B[i]=1;return;}
+  if(_D._bad){c.innerHTML='<div class="fl-hd">${escH(R.badHd)}</div><div class="fl-list"><div class="fl-row">${escH(R.badBody)}</div></div>';_B[i]=1;return;}
   for(var k=0;k<f.length;k++){h+='<div class="fl-row"><span class="fl-p">'+_esc(f[k][0])+'</span><span class="fl-s">'+_sz(f[k][1])+'</span></div>';}
-  c.innerHTML='<div class="fl-hd">'+f.length+' file'+(f.length>1?'s':'')+' ingested</div><div class="fl-list">'+h+'</div>';_B[i]=1;}
+  c.innerHTML='<div class="fl-hd">'+(${R.filesHd})(f.length)+'</div><div class="fl-list">'+h+'</div>';_B[i]=1;}
 // The open/closed state is read AFTER the await, or two fast clicks during
 // the first decode both see "closed" and both open the row.
 async function tgl(i){
@@ -8860,10 +8963,12 @@ async function kioskStart(){
     kioskShowResult('stop','Not set up yet','No destination has been chosen.',
                     'Ask the person who set up this station.');
     return; }
-  // The same rule as the standard window, applied again here rather than
-  // trusted from the field: a value restored, pasted or set by script must not
-  // put a space (or a slash) into a folder name that the engine only flattens.
-  const clean = x => String(x==null?'':x).replace(/[^A-Za-z0-9]/g,'');
+  // The same rule as the sanitizeMeta() field filter, applied again here rather
+  // than trusted from the field: a value restored, pasted or set by script must
+  // not put a path separator (or a Windows-illegal character) into a folder
+  // name the engine only flattens. Non-Latin names pass; cleanSegment() in
+  // main.js still trims and cleans each folder level on the way to the drive.
+  const clean = x => String(x==null?'':x).replace(/[/\\:*?"<>|\x00-\x1f]/g,'');
   const op=clean(document.getElementById('k-op').value);
   const cam=clean(document.getElementById('k-cam').value);
   const pp=normPP(document.getElementById('k-pp').value);

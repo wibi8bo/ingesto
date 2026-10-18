@@ -6,12 +6,17 @@ ses règles propres et ce qui reste à faire. Le détail est dans `docs/notes/`.
 ## En bref
 ingesto est une application Electron gratuite (GPL-3.0) qui copie les cartes
 caméra vers plusieurs destinations à la fois et vérifie chaque fichier (DIT,
-tournage). Mac, Windows et Linux. Dépôt : github.com/noar-justedit/ingesto.
+tournage). Mac, Windows et Linux. Dépôt : github.com/wibi8bo/ingesto (fork du
+projet original noar-justedit/ingesto, localisé en chinois).
 Auteur : Noar (Arnaud Augst, Just Edit).
 
-- Version du dossier : **2.8.0** (13.10.2026) : Electron 44, notes en
-  markdown, menu des picture profiles, liste des opérateurs de la session,
-  Operator / Camera / Profile sur une ligne (Copy Info, cartes, kiosk).
+- Version du dossier : **2.8.1** (19.10.2026) : fork wibi8bo — localisation
+  zh-CN complète (interface, zone de copie, rapport HTML bilingue, dates),
+  langue persistée avec détection de la langue système, saisie des noms en
+  caractères chinois acceptée, volumes « Recovery » filtrés. Repose sur la
+  2.8.0 : Electron 44, notes en markdown, menu des picture profiles, liste
+  des opérateurs de la session, Operator / Camera / Profile sur une ligne
+  (Copy Info, cartes, kiosk).
 - La 2.7.3 (suivi du projet, `push_github.command`) a été préparée mais n'était
   pas sur GitHub au 13.10 : la 2.8.0 la contient.
 - Dernière version publiée avec binaires : 2.7.2 (tags GitHub `vX.Y.Z`).

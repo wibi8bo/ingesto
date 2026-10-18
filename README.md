@@ -1,6 +1,7 @@
 # ingesto
 ### 专业摄像机素材上载工具
 Develop by just edit; Translate by wibi8bo.
+
 原项目地址：[https://github.com/noar-justedit/ingesto](https://github.com/noar-justedit/ingesto)
 
 面向视频与音频专业人员（DIT 数字影像技师、摄影师、剪辑师）的免费开源素材上载（ingest）工具——可将素材从存储卡和硬盘复制到任意多个目标位置，每个文件都会被回读并校验；支持摄像机自动识别、校验和清单、MHL 与 ASC MHL 清单、上载报告、手机推送通知，以及适用于现场使用的 Kiosk（自助终端）模式。

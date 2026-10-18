@@ -990,6 +990,14 @@ async function getMountedVolumes() {
   let entries = [];
   try { entries = fs.readdirSync('/Volumes'); } catch (_) { return []; }
 
+  // Mount points that are never user-visible media. macOS mounts its recovery
+  // partition at /Volumes/Recovery — Finder hides it, but a readdir of
+  // /Volumes lists it, and an ingest tool has no business offering it as a
+  // source or a destination. Exact-name match only: a user's own drive that
+  // merely contains "recovery" somewhere in its label stays visible.
+  const HIDDEN_VOLUME_NAMES = /^recovery$/i;
+  entries = entries.filter(name => !HIDDEN_VOLUME_NAMES.test(name));
+
   let rootDev = null;
   try { rootDev = fs.statSync('/').dev; } catch (_) {}
 
