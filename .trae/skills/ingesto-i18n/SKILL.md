@@ -11,11 +11,11 @@ description: ingesto 汉化维护。当需要查找或修复渲染进程界面�
 
 - **只译渲染进程 UI**：窗口里所有用户可见文字。
 - **不译**：`src/main/*.js` 生成的报告文件内容（HTML/CSV/JSON/MHL）、系统通知、模板变量、模式名、算法名、品牌名、路径/URL/文件名。
-- **不改功能逻辑**：只动词典 [zh-CN.js](file:///Users/buxiangze/Documents/XcodeProject/ingesto/src/renderer/lang/zh-CN.js)、引擎 [i18n.js](file:///Users/buxiangze/Documents/XcodeProject/ingesto/src/renderer/i18n.js) 与本技能文件；`index.html` 原则上只在确有必要时改（引擎已能覆盖绝大多数场景）。
+- **不改功能逻辑**：只动词典 [zh-CN.js](file:///Users/buxiangze/Documents/justedit%20Project/ingesto/src/renderer/lang/zh-CN.js)、引擎 [i18n.js](file:///Users/buxiangze/Documents/justedit%20Project/ingesto/src/renderer/i18n.js) 与本技能文件；`index.html` 原则上只在确有必要时改（引擎已能覆盖绝大多数场景）。
 
 ## 架构
 
-- [i18n.js](file:///Users/buxiangze/Documents/XcodeProject/ingesto/src/renderer/i18n.js)：翻译引擎，在 index.html 末尾之前加载。
+- [i18n.js](file:///Users/buxiangze/Documents/justedit%20Project/ingesto/src/renderer/i18n.js)：翻译引擎，在 index.html 末尾之前加载。
   - 可翻译属性 `ATTRS = title / placeholder / aria-label / data-tip / data-ph`。
   - 查词顺序：**texts → attrs → patterns**；属性查词时先查 attrs 再兜底查 texts。
   - MutationObserver 跟进所有动态内容（innerHTML 重建、textContent 赋值、属性变更）。
@@ -24,7 +24,7 @@ description: ingesto 汉化维护。当需要查找或修复渲染进程界面�
   - SVG **不**跳过：只改白名单属性和文本节点，所以图标 `<title>`（如 in use）可译、`path d` 等几何属性不受影响。
 - **语言持久化是双源结构**（2026-10 修复）：localStorage（`ingesto-language`）只作启动早期的**同步缓存**，让 DOMContentLoaded 时无闪烁应用；`ingesto-prefs.json` 的 `language` 字段才是**权威源**，随 `persistPrefsNow()` 与其他设置一起由主进程同步写盘。boot 在 `loadPrefs()` 后校准：两者不一致时以 prefs 为准调 `setLanguage`（同时回写 localStorage）。下拉 change 时引擎除写 localStorage 外还调 `window.persistPrefs()`（函数可能不存在，必须容错）。排查"语言重启回退"先看 prefs.json 有没有 `language` 字段，不要只看 localStorage 的 leveldb（strings 能看到历史旧值，会误导）。
 - **首次启动按系统语言探测**（`detectSystemLang`）：`getSavedLang()` 在 localStorage 无值时读 `navigator.language`，`/^zh/` 开头（简体/繁体都算）→ `zh-CN`，其他 → `en`，并当场 `saveLang` 固化。只在从未选过语言时触发；用户已有 localStorage 或 prefs 值时不参与。验证方法：Electron `--lang=fr-FR` 命令行参数可进程级模拟系统语言（渲染进程 `navigator.language` 随之变化），比 CDP 注入 override 可靠（后者赶不上首次加载前的引擎初始化）。
-- [zh-CN.js](file:///Users/buxiangze/Documents/XcodeProject/ingesto/src/renderer/lang/zh-CN.js)：词典，四个区：
+- [zh-CN.js](file:///Users/buxiangze/Documents/justedit%20Project/ingesto/src/renderer/lang/zh-CN.js)：词典，四个区：
   - `texts`：静态/完整句文本（也兜底属性）。
   - `attrs`：属性专用译文。
   - `patterns`：`[正则字符串, 带 $1 的模板]`，处理含变量的动态文本。
@@ -74,7 +74,7 @@ description: ingesto 汉化维护。当需要查找或修复渲染进程界面�
 
 ## 漏译扫描与回归（标准流程）
 
-脚本：[scan-untranslated.js](file:///Users/buxiangze/Documents/XcodeProject/ingesto/.trae/skills/ingesto-i18n/scripts/scan-untranslated.js)
+脚本：[scan-untranslated.js](file:///Users/buxiangze/Documents/justedit%20Project/ingesto/.trae/skills/ingesto-i18n/scripts/scan-untranslated.js)
 
 ```bash
 node .trae/skills/ingesto-i18n/scripts/scan-untranslated.js                # 扫主界面
@@ -100,7 +100,7 @@ PORT=9232 node .trae/skills/ingesto-i18n/scripts/scan-untranslated.js      # 换
 
 1. `node --check` 两个引擎文件。
 2. 扫描器对改动界面清零（用户数据噪音除外）。
-3. `npm test` 全部通过（当前 29 项；测试链不含 i18n 专项，勿改 package.json）。
+3. `npm test` 全部通过（当前 31 项；测试链不含 i18n 专项，勿改 package.json）。
 4. 切回 English 抽查改动处能精确还原。
 
 ## 提交
